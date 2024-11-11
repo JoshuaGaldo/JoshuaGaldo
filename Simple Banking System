@@ -1,0 +1,148 @@
+class BankAccount:
+    def __init__(self, account_number, name, pin):
+        self.account_number = account_number
+        self.name = name
+        self.pin = pin
+        self.balance = 0
+
+    def deposit(self, amount):
+        if amount > 0:
+            self.balance += amount
+            return True
+        return False
+
+    def withdraw(self, amount):
+        if 0 < amount <= self.balance:
+            self.balance -= amount
+            return True
+        return False
+
+    def check_balance(self):
+        return self.balance
+
+    def update_pin(self, new_pin):
+        self.pin = new_pin
+        return True
+
+
+class BankingSystem:
+    def __init__(self):
+        self.accounts = {}
+
+    def create_account(self, account_number, name, pin):
+        if account_number not in self.accounts:
+            self.accounts[account_number] = BankAccount(account_number, name, pin)
+            return True
+        return False
+
+    def delete_account(self, account_number):
+        if account_number in self.accounts:
+            del self.accounts[account_number]
+            return True
+        return False
+
+    def get_account(self, account_number):
+        return self.accounts.get(account_number, None)
+
+
+def main():
+    bank = BankingSystem()
+
+    while True:
+        print("\n----------Banking System Menu----------")
+        print("1. Create Account")
+        print("2. Delete Account")
+        print("3. Deposit Funds")
+        print("4. Withdraw Funds")
+        print("5. Check Balance")
+        print("6. Update PIN")
+        print("7. Exit")
+        print("----------------------------------------")
+
+        choice = input("Select an option: ")
+        print("----------------------------------------")
+
+        if choice == "1":
+            acc_num = int(input("Enter account number: "))
+            name = input("Enter your name: ")
+            pin = input("Enter PIN: ")
+            if bank.create_account(acc_num, name, pin):
+                print("Account created successfully!")
+            else:
+                print("Account already exists.")
+
+        elif choice == "2":
+            acc_num = int(input("Enter account number to delete: "))
+            if bank.delete_account(acc_num):
+                print("Account deleted successfully!")
+            else:
+                print("Account not found.")
+
+        elif choice == "3":
+            acc_num = int(input("Enter account number: "))
+            while True:  # Loop for PIN verification
+                pin = input("Enter PIN: ")
+                account = bank.get_account(acc_num)
+                if account and account.pin == pin:  # Check PIN
+                    amount = float(input("Enter amount to deposit: "))
+                    if account.deposit(amount):
+                        print("Deposit successful!")
+                        break  # Exit loop on successful deposit
+                    else:
+                        print("Invalid deposit amount.")
+                else:
+                    print("Incorrect PIN. Please try again.")
+
+        elif choice == "4":
+            acc_num = int(input("Enter account number: "))
+            while True: 
+                pin = input("Enter PIN: ")
+                account = bank.get_account(acc_num)
+                if account and account.pin == pin:  
+                    amount = float(input("Enter amount to withdraw: "))
+                    if account.withdraw(amount):
+                        print("Withdrawal successful!")
+                        break  
+                    else:
+                        print("Insufficient funds.")
+                else:
+                    print("Incorrect PIN. Please try again.")
+
+        elif choice == "5":
+            acc_num = int(input("Enter account number: "))
+            while True:  
+                pin = input("Enter PIN: ")
+                account = bank.get_account(acc_num)
+                if account and account.pin == pin:  
+                    if account:
+                        print(f"Balance: {account.check_balance()}")
+                        break  
+                    else:
+                        print("Account not found.")
+                else:
+                    print("Incorrect PIN. Please try again.")
+
+        elif choice == "6":
+            acc_num = int(input("Enter account number: "))
+            while True:
+                pin = input("Enter PIN: ")
+                account = bank.get_account(acc_num)
+                if account and account.pin == pin:  
+                    new_pin = input("Enter new PIN: ")
+                    if account.update_pin(new_pin):
+                        print("PIN updated successfully!")
+                        break  
+                    else:    
+                        print("Invalid new PIN. Please try again.")
+                else:        
+                    print("Incorrect PIN. Please try again.")
+                    
+        elif choice == "7":
+            print("Exiting...")
+            break
+            
+        else:    
+            print("Invalid option, please try again.")
+  
+if __name__ == "__main__":
+   main()
